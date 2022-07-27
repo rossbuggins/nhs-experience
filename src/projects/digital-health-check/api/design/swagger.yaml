@@ -1,0 +1,979 @@
+openapi: 3.0.0
+info:
+  title: NHs Digital Health Check
+  description: ""
+  version: v0.1
+servers:
+- url: https://virtserver.swaggerhub.com/RossBugginsNHS/nhs-digital-health-check/v0.1
+  description: SwaggerHub API Auto Mocking
+- url: https://virtserver.swaggerhub.com/NHSX/nhs-digital-health-check/v0.1
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Digital Health Checks
+  description: My Completed Digital Health Checks
+- name: Digital Health Checks|Submissions
+  description: My Digital Health Checks - would take data from the "Observations"
+    data store?
+paths:
+  /tools/digitalhealthcheck:
+    post:
+      tags:
+      - Tools | Digital Health Checks
+      requestBody:
+        description: Returns an analysis of the given blood pressure reading.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalHealthCheckRequest'
+            examples:
+              All:
+                $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+  /tools/digitalhealthcheck/{checkId}:
+    get:
+      tags:
+      - Tools | Digital Health Checks
+      description: Gets the health check result.
+      parameters:
+      - name: checkId
+        in: path
+        description: The Check
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+  /mynhs/{userId}/digitalhealthchecks:
+    get:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: skip
+        in: query
+        description: The number of items to skip before starting to collect the result
+          set.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: limit
+        in: query
+        description: The numbers of items to return.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+  /mynhs/{userId}/digitalhealthchecks/submissions:
+    post:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      requestBody:
+        description: Returns an analysis of the given blood pressure reading.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+            examples:
+              All:
+                $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+  /mynhs/{userId}/digitalhealthchecks/submissions/{submissionId}:
+    get:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: submissionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+    put:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: submissionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+      requestBody:
+        description: Returns an analysis of the given blood pressure reading.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalHealthCheckRequest'
+            examples:
+              All:
+                $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+    patch:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: submissionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+      requestBody:
+        description: Returns an analysis of the given blood pressure reading.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalHealthCheckRequest'
+            examples:
+              DaysOld:
+                $ref: '#/components/examples/DaysOldExample'
+              Height:
+                $ref: '#/components/examples/HeightExample1'
+              AgeAndHeightExample:
+                $ref: '#/components/examples/AgeAndHeightExample'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+  /mynhs/{userId}/digitalhealthchecks/submissions/{submissionId}/submit:
+    put:
+      tags:
+      - Digital Health Checks|Submissions
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: submissionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+      responses:
+        "202":
+          description: "Note the 202 Accepted response, not a 200 OK. The location\
+            \ of the created resource when created is avaliable from the Location\
+            \ header, or the ResourceLocation property in the response."
+          headers:
+            Location:
+              description: 202 The location that the created resource will be avaliable
+                at. Same as response body ResourceLocation
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+              example: "/mynhs/my/observations/{ResourceId}"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionResponse'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+  /mynhs/{userId}/digitalhealthchecks/{healthCheckId}:
+    get:
+      tags:
+      - Digital Health Checks
+      parameters:
+      - name: userId
+        in: path
+        description: The User Id to access
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+            -[0-9a-fA-F]{12}"
+          type: string
+        examples:
+          userId:
+            summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+            value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+          my:
+            summary: "[my] - will not require addition restrictor on the scope"
+            value: my
+      - name: healthCheckId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+        example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+      - name: skip
+        in: query
+        description: The number of items to skip before starting to collect the result
+          set.
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: limit
+        in: query
+        description: The numbers of items to return.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blank'
+      security:
+      - MyNhsOAuth2:
+        - digitalhealthcheck.read
+components:
+  schemas:
+    Blank:
+      type: object
+    DigitalHealthCheckRequest:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+      - $ref: '#/components/schemas/DigitalHealthCheckRequestMinimal'
+    DigitalHealthCheckRequestMinimal:
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/Age'
+      - $ref: '#/components/schemas/Height'
+      - $ref: '#/components/schemas/Mass'
+      - $ref: '#/components/schemas/BloodPressure'
+      - $ref: '#/components/schemas/BloodSugar'
+      - $ref: '#/components/schemas/Colesterol'
+    DigitalHealthCheckRequestAll:
+      required:
+      - Age
+      - AlcoholUse
+      - BloodPressure
+      - BloodSugar
+      - Colesterol
+      - Ethnicity
+      - FamilyHistory
+      - Gender
+      - Height
+      - PhysicalActivity
+      - Smoking
+      - Weight
+      type: object
+      properties:
+        Age:
+          $ref: '#/components/schemas/Age'
+        Height:
+          $ref: '#/components/schemas/Height'
+        Weight:
+          $ref: '#/components/schemas/Mass'
+        BloodPressure:
+          $ref: '#/components/schemas/BloodPressure'
+        BloodSugar:
+          $ref: '#/components/schemas/BloodSugar'
+        Colesterol:
+          $ref: '#/components/schemas/Colesterol'
+        Ethnicity:
+          type: string
+          example: Default Ethnicity
+        AlcoholUse:
+          type: integer
+          format: int64
+        Smoking:
+          type: integer
+          format: int64
+        PhysicalActivity:
+          type: integer
+          format: int64
+        FamilyHistory:
+          type: integer
+          format: int64
+        Gender:
+          type: string
+    DigitalHealthCheckResult:
+      type: object
+      properties:
+        HealthyPercentage:
+          type: integer
+          format: int64
+    Observation:
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/Age'
+      - $ref: '#/components/schemas/Height'
+      - $ref: '#/components/schemas/Mass'
+      - $ref: '#/components/schemas/BloodPressure'
+      - $ref: '#/components/schemas/BloodSugar'
+      - $ref: '#/components/schemas/Colesterol'
+    Colesterol:
+      type: object
+      properties:
+        LDL:
+          type: number
+          description: mg/dL
+        HDL:
+          type: number
+          description: mg/dL
+        TotalCholesterol:
+          type: number
+          description: mg/dL
+        Triglycerides:
+          type: number
+          description: mg/dL
+        VldlLevels:
+          type: number
+          description: mg/dL
+    BloodSugar:
+      type: object
+      discriminator:
+        propertyName: bloodSugarReadingType
+      oneOf:
+      - $ref: '#/components/schemas/Glocose'
+      - $ref: '#/components/schemas/MeanBlood'
+      - $ref: '#/components/schemas/HBA1C'
+    Glocose:
+      required:
+      - bloodSugarReadingType
+      - mmolL
+      type: object
+      properties:
+        mmolL:
+          type: number
+          example: 8.2
+        bloodSugarReadingType:
+          type: string
+          default: Glocose
+    MeanBlood:
+      required:
+      - bloodSugarReadingType
+      - mgdl
+      type: object
+      properties:
+        mgdl:
+          type: number
+          example: 150
+        bloodSugarReadingType:
+          type: string
+          default: MeanBlood
+    HBA1C:
+      required:
+      - TestScore
+      - bloodSugarReadingType
+      type: object
+      properties:
+        TestScore:
+          type: number
+          example: 7.0
+        bloodSugarReadingType:
+          type: string
+          default: HBA1C
+    Height:
+      required:
+      - Millimeters
+      type: object
+      properties:
+        Millimeters:
+          type: integer
+          format: int64
+          example: 1700
+    Mass:
+      required:
+      - Grams
+      type: object
+      properties:
+        Grams:
+          type: integer
+          format: int64
+          example: 100000
+    BloodPressure:
+      type: object
+      properties:
+        Systolic:
+          type: integer
+          description: The bigger number (the first number)
+          format: int64
+          example: 80
+        Diastolic:
+          type: integer
+          description: The smaller number (the second number)
+          format: int64
+          example: 110
+      description: Diastolic/Systolic
+    BloodPressureResult:
+      type: object
+      properties:
+        BloodPressureCategory:
+          type: string
+          example: Hypertensive Crisis
+          enum:
+          - Normal
+          - Elevated
+          - Hypertension Stage 1
+          - Hypertension Stage 2
+          - Hypertensive Crisis
+    Age:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/DaysOld'
+      - $ref: '#/components/schemas/YearsOld'
+      - $ref: '#/components/schemas/DateOfBirth'
+    DateOfBirth:
+      type: object
+      properties:
+        BirthdayDoNotUse:
+          type: string
+          description: Date of birth - * DO NOT USE * this as it means operations
+            will not be repeatable
+          format: date
+    YearsOld:
+      type: object
+      properties:
+        Years:
+          type: integer
+          description: Number of years old (rounded down to whole number)
+          example: 33
+    DaysOld:
+      type: object
+      properties:
+        Days:
+          type: integer
+          description: Number of days old (rounded down to whole number)
+          example: 6541
+    SubmissionResponse:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SubmissionStatusBaseWithLocation'
+    SubmissionData:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/Observation'
+      - $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
+    SubmissionStatusBase:
+      type: object
+      properties:
+        SubmissionId:
+          type: string
+          format: uuid
+        SubmittedByUserId:
+          type: string
+          format: uuid
+        SubmittedByAppId:
+          type: string
+          format: uuid
+        DateSubmissionCreated:
+          type: string
+          format: date-time
+        SubmittedData:
+          $ref: '#/components/schemas/SubmissionData'
+    SubmissionStatusBaseWithDataArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/SubmissionStatusBase'
+    FinishedSubmissionStatusBaseWithoutLocation:
+      type: object
+      properties:
+        DateSubmitted:
+          type: string
+          format: date-time
+        SubmissionStatusLocation:
+          type: string
+          format: uri
+          example: "/mynhs/my/observations/submissions/{SubmissionId}"
+      allOf:
+      - $ref: '#/components/schemas/SubmissionStatusBase'
+    SubmissionStatusBaseWithLocation:
+      type: object
+      properties:
+        ResourceId:
+          type: string
+          format: uuid
+        DateSubmitted:
+          type: string
+          format: date-time
+        SubmissionStatusLocation:
+          type: string
+          format: uri
+          example: "/mynhs/my/observations/submissions/{SubmissionId}"
+        ResourceLocation:
+          type: string
+          description: The location that the created resource will be avaliable at.
+            Same as response header Location
+          format: uri
+          example: "/mynhs/my/observations/{ResourceId}"
+      allOf:
+      - $ref: '#/components/schemas/SubmissionStatusBase'
+    SubmissionStatus:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/StatusEnum'
+        PercentComplete:
+          type: integer
+          format: percent
+        StagesDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmissionResponseDetails'
+      allOf:
+      - $ref: '#/components/schemas/SubmissionStatusBaseWithLocation'
+    SubmissionResponseDetails:
+      type: object
+      properties:
+        SystemName:
+          type: string
+        Status:
+          $ref: '#/components/schemas/StatusEnum'
+        IsCompletedSuccessfully:
+          type: boolean
+        PercentComplete:
+          $ref: '#/components/schemas/PercentComplete'
+        DateStarted:
+          type: string
+          format: date-time
+        DateFinished:
+          type: string
+          format: date-time
+        DateUpdated:
+          type: string
+          format: date-time
+    StatusEnum:
+      type: string
+      enum:
+      - Not Started
+      - In progress
+      - Success
+      - Failed
+    PercentComplete:
+      maximum: 100
+      minimum: 0
+      type: integer
+      format: int32
+      example: 99
+      default: 0
+  responses:
+    SubmissionAcceptedResponse:
+      description: "Note the 202 Accepted response, not a 200 OK. The location of\
+        \ the created resource when created is avaliable from the Location header,\
+        \ or the ResourceLocation property in the response."
+      headers:
+        Location:
+          description: 202 The location that the created resource will be avaliable
+            at. Same as response body ResourceLocation
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uri
+          example: "/mynhs/my/observations/{ResourceId}"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubmissionResponse'
+    SubmissionCreatedResponse:
+      description: "Note the 201 Created response, not a 200 OK. The location of the\
+        \ created resource avaliable from the Location header, or the ResourceLocation\
+        \ property in the response."
+      headers:
+        Location:
+          description: 202 The location that the created resource will be avaliable
+            at. Same as response body ResourceLocation
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uri
+          example: "/mynhs/my/observations/{ResourceId}"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubmissionResponse'
+    SubmissionFinishedResponse:
+      description: "Note the 200 response. This is not saying created, or accepted\
+        \ - but OK it has finished but not created. This actually indicated likely\
+        \ a problem here."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FinishedSubmissionStatusBaseWithoutLocation'
+    SubmissionStatusResponse:
+      description: Accepted
+      headers:
+        Location:
+          description: 200 The location that the created resource will be avaliable
+            at. Same as response body ResourceLocation
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uri
+          example: "/mynhs/my/observations/{ResourceId}"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubmissionStatus'
+  parameters:
+    skipParam:
+      name: skip
+      in: query
+      description: The number of items to skip before starting to collect the result
+        set.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+    limitParam:
+      name: limit
+      in: query
+      description: The numbers of items to return.
+      required: false
+      style: form
+      explode: true
+      schema:
+        maximum: 50
+        minimum: 1
+        type: integer
+        default: 20
+    userIdParam:
+      name: userId
+      in: path
+      description: The User Id to access
+      required: true
+      style: simple
+      explode: false
+      schema:
+        pattern: "^my$|[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\\
+          -[0-9a-fA-F]{12}"
+        type: string
+      examples:
+        userId:
+          summary: "[UserId UUID] - require .All or .Shared oath scope restrictors"
+          value: baf12b6c-d18b-43ad-b49e-e72ca102a970
+        my:
+          summary: "[my] - will not require addition restrictor on the scope"
+          value: my
+    submissionIdParam:
+      name: submissionId
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+    healthCheckIdParam:
+      name: healthCheckId
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: uuid
+      example: baf12b6c-d18b-43ad-b49e-e72ca102a970
+    observationTypeParam:
+      name: observationType
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        enum:
+        - all
+        - weight
+        - bloodpressure
+        - height
+    healthCheckTypeParam:
+      name: healthCheckType
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        enum:
+        - all
+        - weight
+        - bloodpressure
+        - height
+        - bloodsugar
+        - colesterol
+        - wellnessquestions
+        - age
+    queryTypeParam:
+      name: queryType
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        enum:
+        - min
+        - max
+        - avg
+        - stdDev
+    pastDaysParam:
+      name: pastDays
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: number
+        enum:
+        - 1
+        - 3
+        - 5
+        - 7
+        - 14
+        - 30
+  examples:
+    ObservationExample:
+      value:
+        Age:
+          Days: 4329
+    ObservationResponseExample:
+      value:
+        SubmissionId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        SubmittedByUserId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        SubmittedByAppId: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        SubmittedData:
+          Age:
+            Days: 4329
+    DaysOldExample:
+      summary: Number of days old
+      value:
+        Days: 4329
+    HeightExample1:
+      summary: Height in mm
+      value:
+        Millimeters: 654222
+    AgeAndHeightExample:
+      summary: Days old and Height in mm
+      value:
+        Days: 4329
+        Millimeters: 654222
+  securitySchemes:
+    MyNhsOAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            appointment.read: Read
+            appointment.read.all: Read All
+            appointment.read.shared: Read Shared
+            applications.read: Grants read access to applications
+            profile.read: Read My Profile- only for owner to read the primary user
+              profile
+            profile.read.all: Read All Profiles - ie read profile of primary user
+              if you have been given guest access
+            events.read: Read My Events in this tennant
+            events.read.shared: Read All events shared with me (ie another users events)
+            events.read.all: Read All events - must be granted owner for this
+            digitalhealthcheck.read: Grants read access to digital health check
+            digitalhealthcheck.read.shared: Grants read access to digital health check
+            observations.read: Read observations
+            observations.read.shared: Read all obs
+            observations.bloodpressure.read: Read your blood pressures
+            observations.bloodpressure.read.shared: Read any blood pressures shared
+              with you
+            observations.bloodpressure.submit: Submit new blood pressure reading
+            observations.bloodpressure.delete: Delete existing blood pressure reading
+            observations.bloodpressure.summary.read: read summary
+            observations.bloodpressure.summary.read.shared: sd
+            healthcheck.execute: Run a health check
