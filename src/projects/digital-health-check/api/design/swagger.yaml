@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: NHs Digital Health Check
+  title: NHS Digital Health Check
   description: ""
   version: v0.1
 servers:
@@ -64,7 +64,7 @@ paths:
   /mynhs/{userId}/digitalhealthchecks:
     get:
       tags:
-      - Digital Health Checks|Submissions
+      - Digital Health Checks
       parameters:
       - name: userId
         in: path
@@ -232,7 +232,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DigitalHealthCheckRequest'
+              $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
             examples:
               All:
                 $ref: '#/components/schemas/DigitalHealthCheckRequestAll'
