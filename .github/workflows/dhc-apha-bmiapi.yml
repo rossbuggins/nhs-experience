@@ -1,7 +1,7 @@
-name: dhc api build and test
+name: bmi api build and test
 
 env:
-  AZURE_WEBAPP_NAME: nhs-dhc   # set this to your application's name
+  AZURE_WEBAPP_NAME: nhs-bmi   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6'                 # set this to the .NET Core version to use
 
@@ -12,13 +12,13 @@ on:
     branches:
       - latest
     paths:
-      - 'src/projects/digital-health-check/discovery/dhc/src/dhcapi/**'
+      - 'src/projects/digital-health-check/discovery/dhc/src/bmiapi/**'
 
 jobs:
   build:
     defaults:
       run:
-        working-directory: src/projects/digital-health-check/discovery/dhc/src/dhcapi
+        working-directory: src/projects/digital-health-check/discovery/dhc/src/bmiapi
     runs-on: ubuntu-latest
     strategy:
       matrix:
