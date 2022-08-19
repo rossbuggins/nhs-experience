@@ -1,0 +1,36 @@
+{
+	"folders": [
+		{
+			"path": "src/bmiapi"
+		},
+		{
+			"path": "src/dhc"
+		},
+		{
+			"path": "src/tests"
+		},
+		{
+			"path": "src/sln"
+		},
+		{
+			"path": "src/bpapi"
+		},
+		{
+			"path": "src/dhcapi"
+		},
+		{
+			"path": "src/.config"
+		},
+		{
+			"path": "src/.vscode"
+		},
+		{
+			"path": "src/bmiclient"
+		}
+	],
+	"settings": {
+		"omnisharp.projects": [
+			"src/sln/dhc.sln"
+		]
+	}
+}
